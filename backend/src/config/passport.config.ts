@@ -1,0 +1,36 @@
+import passport from "passport";
+import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
+import { UnauthorizedException } from "../utils/appError";
+import { findByIdUserService } from "../services/user.service";
+import { Env } from "./env.config";
+
+passport.use(
+    new JwtStrategy(
+        {
+            jwtFromRequest: ExtractJwt.fromExtractors([
+                (req) => {
+                    const token= req.cookie.accessToken;
+                    if(!token) 
+                        throw new UnauthorizedException("Unauthorized access")
+                    return token;
+                }
+            ]),
+            secretOrKey: Env.JWT_SECRET,
+            audience: ["user"],
+            algorithms: ["HS256"],
+        },
+        async ({userId}, done) => {
+            try {
+                const user= userId && (await findByIdUserService(userId));
+
+                return done(null, user || false)
+            } catch (error) {
+                return done(error, false)
+            }
+        }
+    )
+)
+
+export const passportAuthenticateJwt= passport.authenticate('jwt', {
+    session: false,
+})

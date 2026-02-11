@@ -37,7 +37,7 @@ export class BadRequestException extends AppError {
     }
 }
 
-export class Unauthorized extends AppError {
+export class UnauthorizedException extends AppError {
     constructor(message: string= "Unauthorized Access") {
         super(
             message,
@@ -47,7 +47,7 @@ export class Unauthorized extends AppError {
     }
 }
 
-export class Forbidden extends AppError {
+export class ForbiddenException extends AppError {
     constructor(message: string= "Forbidden Resource") {
         super(
             message,
@@ -57,7 +57,7 @@ export class Forbidden extends AppError {
     }
 }
 
-export class NotFound extends AppError {
+export class NotFoundException extends AppError {
     constructor(message: string= "Resource Not Found!") {
         super(
             message,

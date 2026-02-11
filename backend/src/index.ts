@@ -7,6 +7,8 @@ import { asyncHandler } from "./middlewares/asyncHandler.middleware";
 import { HTTP_STATUS } from "./config/http.config";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 import connectDatabase from "./config/database.config";
+import passport from "passport";
+import routes from "./routes";
 
 const app= express();
 
@@ -22,12 +24,16 @@ app.use(
     })
 );
 
+app.use(passport.initialize())
+
 app.get('/health', asyncHandler(async (req: Request, res:Response) => {
     res.status(HTTP_STATUS.OK).json({
         status: "OK",
         message: "Server is working!"
     })
 }));
+
+app.use('/api', routes)
 
 app.use(errorHandler);
 
