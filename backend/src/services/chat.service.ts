@@ -1,3 +1,4 @@
+import { emitNewChatToParticipants } from "../lib/socket";
 import ChatModel from "../models/chat.model";
 import MessageModel from "../models/message.model";
 import UserModel from "../models/user.model";
@@ -51,6 +52,12 @@ export const createChatService= async(
         })
     }
 
+    const populateChat= await chat?.populate("participants", "name avatar isAI")
+
+    const participantIdString= populateChat?.participants?.map((p) => p._id?.toString())
+
+    emitNewChatToParticipants(participantIdString, populateChat)
+    
     return chat
 }
 

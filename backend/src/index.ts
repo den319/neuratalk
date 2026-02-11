@@ -9,10 +9,17 @@ import { errorHandler } from "./middlewares/errorHandler.middleware";
 import connectDatabase from "./config/database.config";
 import passport from "passport";
 import routes from "./routes";
+import http from "http";
+import { initializeSocket } from "./lib/socket";
 
 const app= express();
 
-app.use(express.json());
+const server = http.createServer(app);
+
+//socket
+initializeSocket(server);
+
+app.use(express.json({limit: "5mb"}));
 app.use(cookieParser());
 
 app.use(express.urlencoded({extended: true}));
