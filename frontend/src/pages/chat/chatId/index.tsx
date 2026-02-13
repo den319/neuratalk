@@ -5,7 +5,7 @@ import ChatHeader from "@/components/chat/chat-header";
 import EmptyState from "@/components/empty-state";
 import { Spinner } from "@/components/ui/spinner";
 import { useAuth } from "@/hooks/use-auth";
-import { useChat } from "@/hooks/use-chat";
+import { useChat, useChatSocket } from "@/hooks/use-chat";
 import useChatId from "@/hooks/use-chat-id";
 import { useSocket } from "@/hooks/use-socket";
 import type { MessageType } from "@/types/chat.type";
@@ -17,11 +17,17 @@ const SingleChat = () => {
   const { socket } = useSocket();
   const { user } = useAuth();
 
+  // Initialize socket listeners for chat events
+  useChatSocket();
+
   const [replyTo, setReplyTo] = useState<MessageType | null>(null);
 
   const currentUserId = user?._id || null;
   const chat = singleChat?.chat;
   const messages = singleChat?.messages || [];
+
+  const isAIChat= chat?.isAiChat || false;
+
 
   useEffect(() => {
     if (!chatId) return;
@@ -72,6 +78,7 @@ const SingleChat = () => {
       <ChatFooter
         replyTo={replyTo}
         chatId={chatId}
+        isAIChat= {isAIChat}
         currentUserId={currentUserId}
         onCancelReply={() => setReplyTo(null)}
       />

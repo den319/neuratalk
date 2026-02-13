@@ -1,5 +1,3 @@
-import { useChat } from "@/hooks/use-chat";
-import { useSocket } from "@/hooks/use-socket";
 import type { MessageType } from "@/types/chat.type";
 import { useEffect, useRef } from "react";
 import ChatBodyMessage from "./chat-body-message";
@@ -9,22 +7,8 @@ interface Props {
   messages: MessageType[];
   onReply: (message: MessageType) => void;
 }
-const ChatBody = ({ chatId, messages, onReply }: Props) => {
-  const { socket } = useSocket();
-  const { addNewMessage } = useChat();
+const ChatBody = ({ messages, onReply }: Props) => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (!chatId) return;
-    if (!socket) return;
-
-    const handleNewMessage = (msg: MessageType) => addNewMessage(chatId, msg);
-
-    socket.on("message:new", handleNewMessage);
-    return () => {
-      socket.off("message:new", handleNewMessage);
-    };
-  }, [socket, chatId, addNewMessage]);
 
   useEffect(() => {
     if (!messages.length) return;

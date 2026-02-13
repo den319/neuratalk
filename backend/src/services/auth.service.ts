@@ -8,7 +8,12 @@ export const registerService= async (body: RegisterSchemaType) => {
 
     if(existingUser) throw new UnauthorizedException("User already exists!")
 
-    const newUser= new UserModel({...body})
+    const newUser= new UserModel({
+        name:body.name,
+        password: body.password,
+        email: body.email,
+        avatar: body.avatart,
+    })
 
     await newUser.save()
     return newUser

@@ -46,7 +46,7 @@ app.get('/health', asyncHandler(async (req: Request, res:Response) => {
 app.use('/api', routes)
 
 if (Env.NODE_ENV === "production") {
-  const clientPath = path.resolve(__dirname, "../../client/dist");
+  const clientPath = path.resolve(__dirname, "../../frontend/dist");
 
   //Serve static files
   app.use(express.static(clientPath));

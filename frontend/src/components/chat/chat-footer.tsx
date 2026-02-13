@@ -11,18 +11,19 @@ import { Input } from "../ui/input";
 import { useChat } from "@/hooks/use-chat";
 import ChatReplyBar from "./chat-reply-bar";
 import { useSocket } from "@/hooks/use-socket";
-import { useAuth } from "@/hooks/use-auth";
 
 interface Props {
   chatId: string | null;
   currentUserId: string | null;
   replyTo: MessageType | null;
+  isAIChat:boolean;
   onCancelReply: () => void;
 }
 const ChatFooter = ({
   chatId,
   currentUserId,
   replyTo,
+  isAIChat,
   onCancelReply,
 }: Props) => {
   const messageSchema = z.object({
@@ -116,8 +117,9 @@ const ChatFooter = ({
       image: image || undefined,
       replyTo: replyTo,
     };
+
     //Send Message
-    sendMessage(payload);
+    sendMessage(payload, isAIChat);
 
     onCancelReply();
     handleRemoveImage();

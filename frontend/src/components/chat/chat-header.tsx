@@ -5,8 +5,6 @@ import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import AvatarWithBadge from "../avatar-with-badge";
 import { useSocket } from "@/hooks/use-socket";
-import { useEffect, useState } from "react";
-import { useAuth } from "@/hooks/use-auth";
 
 interface Props {
   chat: ChatType;

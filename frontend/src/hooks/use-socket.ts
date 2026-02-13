@@ -10,7 +10,6 @@ interface ISocketState {
     typingUsers: Map<string, string>; 
     connectSocket: () => void;
     disconnectSocket: () => void;
-    // getBusyUsers: () => void;
 }
 
 export const useSocket= create<ISocketState>()((set, get) => ({
@@ -35,7 +34,6 @@ export const useSocket= create<ISocketState>()((set, get) => ({
         })
 
         newSocket.on("typing:users", (typingData: [string, string][]) => {
-            // console.log("Typing users updated");
             set({ typingUsers: new Map(typingData) });
         })
 
@@ -48,13 +46,4 @@ export const useSocket= create<ISocketState>()((set, get) => ({
             set({socket: null})
         }
     },
-    // getBusyUsers: () => {
-    //     const {socket}= get()
-
-    //     if(socket) {
-    //         socket.on("typing:users", (userIds) => {
-    //         set({ typingUsers: userIds });
-    //     })
-    //     }
-    // }
 }))
