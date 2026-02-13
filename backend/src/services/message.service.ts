@@ -14,6 +14,7 @@ export const sendMessageService= async(
         replyToId?:string,
     }
 ) => {
+    console.log("sending message......")
     const {chatId, content, image, replyToId}= body;
 
     const chat= await ChatModel.findOne({
@@ -37,7 +38,15 @@ export const sendMessageService= async(
     let imageUrl;
 
     if(image) {
-        const uploadRes= await cloudinary.uploader.upload(image);
+        const uploadRes= await cloudinary.uploader.upload(image, {
+            folder: "uploads",
+            resource_type: "image",
+            transformation: [
+                { width: 1280, crop: "limit" }, // prevent massive resolution
+                { quality: "auto" },            // smart compression
+                { fetch_format: "auto" }        // convert to webp/avif
+            ],
+        });
 
         imageUrl= uploadRes.secure_url;
     }

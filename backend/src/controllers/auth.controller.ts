@@ -52,6 +52,7 @@ export const logoutController= asyncHandler(
 
 export const authStatusController= asyncHandler(
     async (req: Request, res:Response) => {
+
         const user= req.user;
 
         return res.status(HTTP_STATUS.OK).json({

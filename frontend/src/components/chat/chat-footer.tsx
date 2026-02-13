@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { MessageType } from "@/types/chat.type";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -10,6 +10,8 @@ import { Form, FormField, FormItem } from "../ui/form";
 import { Input } from "../ui/input";
 import { useChat } from "@/hooks/use-chat";
 import ChatReplyBar from "./chat-reply-bar";
+import { useSocket } from "@/hooks/use-socket";
+import { useAuth } from "@/hooks/use-auth";
 
 interface Props {
   chatId: string | null;
@@ -27,10 +29,14 @@ const ChatFooter = ({
     message: z.string().optional(),
   });
 
+   const { socket } = useSocket();
+
   const { sendMessage, isSendingMsg } = useChat();
 
   const [image, setImage] = useState<string | null>(null);
   const imageInputRef = useRef<HTMLInputElement | null>(null);
+  const typingTimeoutRef = useRef<number | null>(null);
+
 
   const form = useForm({
     resolver: zodResolver(messageSchema),
@@ -38,6 +44,47 @@ const ChatFooter = ({
       message: "",
     },
   });
+
+  const message = form.watch("message") || "";
+
+  useEffect(() => {
+    if (!socket || !chatId) return;
+
+    if (message?.length > 0) {
+      // Emit typing event
+      socket.emit("typing", chatId);
+
+      // Clear existing timeout
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+
+      // Set new timeout to remove typing status
+      typingTimeoutRef.current = window.setTimeout(() => {
+        socket.emit("remove:typing-user", chatId);
+      }, 3000);
+    } else {
+      // Message is empty, immediately remove typing status
+      socket.emit("remove:typing-user", chatId);
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+    }
+
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+    };
+  }, [message, socket, chatId]);
+
+  useEffect(() => {
+    return () => {
+      if (socket && chatId) {
+        socket.emit("remove:typing-user", chatId);
+      }
+    };
+  }, [socket, chatId]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -85,7 +132,7 @@ const ChatFooter = ({
       "
       >
         {image && !isSendingMsg && (
-          <div className="max-w-6xl mx-auto px-8.5">
+          <div className="max-w-6xl mx-auto px-8.5 pb-4">
             <div className="relative w-fit">
               <img
                 src={image}

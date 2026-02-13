@@ -4,6 +4,9 @@ import type { ChatType } from "@/types/chat.type";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import AvatarWithBadge from "../avatar-with-badge";
+import { useSocket } from "@/hooks/use-socket";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
 
 interface Props {
   chat: ChatType;
@@ -11,10 +14,16 @@ interface Props {
 }
 const ChatHeader = ({ chat, currentUserId }: Props) => {
   const navigate = useNavigate();
-  const { name, subheading, avatar, isOnline, isGroup } = getOtherUserAndGroup(
+
+  const typingUsers = useSocket((state) => state.typingUsers);
+
+  const { name, subheading, avatar, isOnline, isGroup, otherUserId } = getOtherUserAndGroup(
     chat,
-    currentUserId
+    currentUserId,
+    // typingUsers,
   );
+
+  const isTyping = !isGroup && otherUserId && typingUsers.get(otherUserId) === chat._id;
 
   return (
     <div
@@ -46,7 +55,7 @@ const ChatHeader = ({ chat, currentUserId }: Props) => {
               isOnline ? "text-green-500" : "text-muted-foreground"
             }`}
           >
-            {subheading}
+            {isTyping ? "Typing..." : subheading}
           </p>
         </div>
       </div>

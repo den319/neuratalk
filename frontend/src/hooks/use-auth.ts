@@ -66,7 +66,6 @@ export const useAuth= create<AuthState>()((set) => ({
         } catch (err: any) {
             toast.error(err.response?.data?.message || "Authentication failed");
             console.log(err);
-            //set({ user: null})
         } finally {
             set({ isAuthStatusLoading: false });
         }

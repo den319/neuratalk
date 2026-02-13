@@ -11,7 +11,7 @@ export const isUserOnline = (userId?: string) => {
 
 export const getOtherUserAndGroup = (
   chat: ChatType,
-  currentUserId: string | null
+  currentUserId: string | null,
 ) => {
   const isGroup = chat?.isGroup;
 
@@ -34,6 +34,7 @@ export const getOtherUserAndGroup = (
     isGroup: false,
     isOnline,
     isAI: other?.isAI || false,
+    otherUserId: other?._id,
   };
 };
 

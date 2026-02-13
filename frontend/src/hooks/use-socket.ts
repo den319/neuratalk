@@ -7,16 +7,19 @@ const BASE_URL =
 interface ISocketState {
     socket: Socket | null;
     onlineUsers: string[];
+    typingUsers: Map<string, string>; 
     connectSocket: () => void;
     disconnectSocket: () => void;
+    // getBusyUsers: () => void;
 }
 
 export const useSocket= create<ISocketState>()((set, get) => ({
     socket: null,
     onlineUsers: [],
+    typingUsers: new Map(),
     connectSocket: () => {
         const {socket}= get();
-        if(!socket?.connect)
+        if(socket?.connected)
             return
 
         const newSocket= io(BASE_URL, {withCredentials: true, autoConnect:true})
@@ -24,13 +27,18 @@ export const useSocket= create<ISocketState>()((set, get) => ({
         set({socket: newSocket})
 
         newSocket.on("connect", () => {
-            console.log("Socket connected", newSocket.id);
+            console.log("Socket connected successfully!");
         })
 
         newSocket.on("online:users", (userIds) => {
-            console.log("Online users", userIds);
             set({ onlineUsers: userIds });
         })
+
+        newSocket.on("typing:users", (typingData: [string, string][]) => {
+            // console.log("Typing users updated");
+            set({ typingUsers: new Map(typingData) });
+        })
+
     },
     disconnectSocket: () => {
         const {socket}= get()
@@ -39,5 +47,14 @@ export const useSocket= create<ISocketState>()((set, get) => ({
             socket.disconnect()
             set({socket: null})
         }
-    }
+    },
+    // getBusyUsers: () => {
+    //     const {socket}= get()
+
+    //     if(socket) {
+    //         socket.on("typing:users", (userIds) => {
+    //         set({ typingUsers: userIds });
+    //     })
+    //     }
+    // }
 }))
