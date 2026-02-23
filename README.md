@@ -9,8 +9,8 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=flat-square&logo=mongodb&logoColor=white)
 ![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=flat-square&logo=socket.io&logoColor=white)
 
-<div stylr="width:100%;">
-<img src="assets/whop-logo.svg" alt="logo" style="display:flex; justify-content:center; align-items:center; width: 100%; max-width: 500px; height: auto;">
+<div align="center">
+<img src="assets/whop-logo.svg" alt="logo" style="display:flex; justify-content:center; align-items:center; width: 100%; max-width: 300px; height: auto;">
 </div>
 
 ## ✨ Features
