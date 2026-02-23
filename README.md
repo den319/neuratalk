@@ -10,7 +10,7 @@
 ![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=flat-square&logo=socket.io&logoColor=white)
 
 <div align="center">
-<img src="assets/whop-logo.svg" alt="logo" style="display:flex; justify-content:center; align-items:center; width: 100%; max-width: 300px; height: auto;">
+<img src="assets/whop-logo.svg" alt="logo" style="display:flex; justify-content:center; align-items:center; max-width: 200px; height: auto;">
 </div>
 
 ## ✨ Features
